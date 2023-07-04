@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        var age = 22
+
+        function fn5(args1, args2) {
+            console.log('fn5', args1, args2);
+            // 1,2
+            //3,4
+            // 5,6
+            setTimeout(() => {
+                console.log(this.age); // 44  55 66 陆续
+                console.log(this); // window
+
+            }, 500)
+        }
+        //改变this
+        //call apply,bind
+        //call 传参=> {} apply=>[] 会自动执行一次 ， bind不会自动执行
+        fn5.call({
+            age: 44
+        }, 1, 2)
+        fn5.apply({
+            age: 55
+        }, [3, 4])
+        fn5.bind({
+            age: 66
+        }, 5, 6)() // 需要调用一下/Users/gaoyanhui/Study/VUE3/handwritten-code/src/code/call_apply_bind.html
+    </script>
+</body>
+
+</html>

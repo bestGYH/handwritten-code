@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 1、避免变量污染 -->
+    <!-- 2、私有化（权限封装） -->
+    <!-- 3、保存变量，常驻内存，（不会被回收机制回收） -->
+    <!-- 4、应用：防抖，节流，库封装（保证数据私有性） -->
+    <script>
+        // 什么是闭包：包含被引入变量（函数）的对象
+        // function func1(){
+        //     let a = 1
+        //     let b =2 
+        //     function fn(){
+        // console.log(a);
+
+        //     }
+        // console.log(b);
+        //     fn()
+        // }
+
+        // func1()
+
+        // function func1() {
+        //     let a = 1
+        //     let b = 2
+        //     let fn = function () {
+        //         console.log(a);
+        //     }
+        //     fn()
+        //     console.log(b);
+        // }
+
+        // func1()
+        // let a = 'jing'
+
+        // function fun() {
+        //     let b = 1
+        //     console.log(a);
+        // }
+        // // console.log(b);
+        // fun()
+        // // 为什么访问不到b
+        // //在js中，定义一个方法，会有AO（临时变量对象） =>active object 包含{方法。局部方法}
+        // // AO程序执行完后，就会被垃圾机制回收
+        // // 全局变量不会被回收
+
+      // 闭包：方法里面返回一个方法，包含被引用变量（函数）的方法
+        function fun2 () {
+            let a = 2
+            let b = 3
+
+           function fn(c) {
+                // return c
+                return {num:a+c,a}
+            }
+            // fn()
+            return fn
+
+        }
+        let a = 999
+        const fun3 = fun2()
+        console.log(fun3(2)); // {num:4,2}
+        console.log(fun3(3)); // {num:5,2}
+
+
+
+        function closeDemo(){
+            let val = 0
+            function changeVal(num){
+                val+=num
+            }
+            return {
+                add1:(num)=>{
+                    changeVal(1)
+                },
+                value:()=>{
+                    return val
+                }
+            }
+        }
+        let closeFun = closeDemo()
+        closeFun.add1()
+        closeFun.add1()
+        console.log(closeFun.value()); // 2
+
+
+    </script>
+</body>
+
+</html>

@@ -3,10 +3,10 @@ const debounce = (fn, initial) => {
 
     let timer = null;
     return () => {
-      clearTimeout(timer);
-      timer = setTimeout(fn, initial);
+        clearTimeout(timer);
+        timer = setTimeout(fn, initial);
     };
-  };
+};
 
 // debounce(function (event) {
 //     const value = searchElement.value;
@@ -33,6 +33,4 @@ var btnClick = document.getElementById('buttonElement');
 btnClick.addEventListener('click', throttle(function (event) {
     console.log(event, '点击了')
 }, 2000));
-
-
 

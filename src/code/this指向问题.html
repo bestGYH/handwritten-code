@@ -1,26 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width, initial-scale=1.0">
     <title>this指向问题</title>
 </head>
+
 <body>
-    
+
 </body>
 <script>
     console.log(this); // window
     // 全局方法的this，指向window
-    function fun(){
+    function fun() {
         console.log(this); // window
     }
-    fun()  // window.fun()
+    fun() // window.fun()
 
     // this指向=》谁调用指向谁？
+
+    let o = {
+        name: '小红',
+        fun1: function () {
+            console.log(this);// o 对象
+        }
+    }
+    o.fun1() 
+
+    var obj = {
+        name: '小绿',
+        fun1: function () {
+            console.log(this.name);// 小绿
+        }
+    }
+    window.obj.fun1() 
+
+
+    var j = {
+        a: 10,
+        b: {
+            a: 12,
+            fn: function () {
+                console.log(this.a); // 12
+                console.log(this); // b对象
+            }
+
+        }
+    }
+    j.b.fn() // 12
+
+    // 谁调用指向谁？不不不，
+    // this指向上一级调用者，点前面的那个对象
+
+
+    //   箭头函数
+
+    var id = 88
+
+    function fn5(args1,args2) {
+        console.log('fn5',args1,args2);
+        let id = 9999
+        // 剪头函数没有作用域，没有this，指向外层
+        setTimeout(() => {
+            console.log(this.id); // 88
+            console.log(this); // window
+
+        }, 500)
+    }
+    fn5({
+        id: 66
+    })
+    //改变this
+    //call apply,bind
+    //call 传参=> {} apply=>[] 会自动执行一次 ， bind不会自动执行
+    fn5.call({id:44})
+
+    var q = {
+        a: 10,
+        b: {
+            a: 12,
+            fn: ()=> {
+                console.log(this.a); // undefined
+                console.log('q',this); // window
+            }
+
+        }
+    }
+    q.b.fn()
     
-
-
-
+ 
 
 </script>
+
 </html>
