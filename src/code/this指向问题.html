@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width, initial-scale=1.0">
+    <title>this指向问题</title>
+</head>
+<body>
+    
+</body>
+<script>
+    console.log(this); // window
+    // 全局方法的this，指向window
+    function fun(){
+        console.log(this); // window
+    }
+    fun()  // window.fun()
+
+    // this指向=》谁调用指向谁？
+    
+
+
+
+
+</script>
+</html>

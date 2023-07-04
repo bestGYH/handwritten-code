@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片懒加载</title>
+    <style>
+        img{
+            display: block;
+            margin-bottom:20px;
+            width:400px;
+            height:400px;
+        } 
+    </style>
+</head>
+
+<body>
+    <img src="./img/loading.gif" alt="" data-src="./img/1.jpeg">
+    <img src="./img/loading.gif" alt="" data-src="./img/2.jpeg">
+    <img src="./img/loading.gif" alt="" data-src="./img/3.jpeg">
+    <img src="./img/loading.gif" alt="" data-src="./img/4.jpeg">
+    <img src="./img/loading.gif" alt="" data-src="./img/5.jpeg">
+    <img src="./img/loading.gif" alt="" data-src="./img/6.jpeg">
+    <img src="./img/loading.gif" alt="" data-src="./img/7.jpeg">
+    <img src="./img/loading.gif" alt="" data-src="./img/8.jpeg">
+    <img src="./img/loading.gif" alt="" data-src="./img/9.jpeg">
+
+    <script>
+        let imgNum = document.getElementsByTagName('img').length
+        let imgs = document.getElementsByTagName('img')
+        let n = 0
+        lazyLoad()
+        window.onscroll=lazyLoad
+        function lazyLoad() {
+            // 懒加载原理
+            let seeHeight = document.documentElement.clientHeight // 视图高度
+            console.log("seeHeight",seeHeight);
+
+            let scrollTop = document.documentElement.scrollTop || document.body.scrollTop // 滚动条距离顶部的距离
+            console.log("scrollTop",scrollTop);
+            for (let i = n; i < imgNum; i++) {
+            console.log("imgs[i].offsetTop",i,imgs[i].offsetTop);
+            console.log("seeHeight + scrollTop",seeHeight + scrollTop);
+
+                if (imgs[i].offsetTop < seeHeight + scrollTop) {
+                    console.log('加载图片');
+                    if(imgs[i].getAttribute('src')==='./img/loading.gif'){
+                        imgs[i].src = imgs[i].getAttribute('data-src')
+
+                    }
+                    n = i+1 // 防止重复加载
+                }
+            }
+        }
+    </script>
+
+</body>
+
+</html>

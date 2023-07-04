@@ -1,4 +1,3 @@
-import { has } from "core-js/core/dict";
 
 export function deepClone(obj, hash = new WeakMap()) {
     if (obj) {
@@ -10,27 +9,29 @@ export function deepClone(obj, hash = new WeakMap()) {
         if (typeof obj !== "object") return obj;
         // // 对象进行深拷贝
         if (hash.get(obj)) return hash.get(obj);
-        let cloneObj = new obj.constructor();
+        // let cloneObj = new obj.constructor();
         // 找到的是所属类原型上的constructor,而原型上的 constructor指向的是当前类本身
-        hash.set(obj, cloneObj);
-        for (let key in obj) {
-          if (obj.hasOwnProperty(key)) {
-            // 实现一个递归拷贝
-            cloneObj[key] = deepClone(obj[key], hash);
-          }
-        }
-        // let cloneObj = {}
-        // if (typeof obj === "object") {
-        //     for (let key in obj) {
-        //         if (obj.hasOwnProperty(key)) {
-        //             if (obj[key] && typeof obj[key] === "object") {
-        //                 cloneObj[key] = deepClone(obj[key]);
-        //             } else {
-        //                 cloneObj[key] = obj[key];
-        //             }
-        //         }
-        //     }
+        // hash.set(obj, cloneObj);
+        // for (let key in obj) {
+        //   if (obj.hasOwnProperty(key)) {
+        //     // 实现一个递归拷贝
+        //     cloneObj[key] = deepClone(obj[key], hash);
+        //   }
         // }
+        let cloneObj = obj instanceof Array ?[]:{}
+        if (typeof obj === "object") {
+            for (let key in obj) {
+                
+                // eslint-disable-next-line no-prototype-builtins
+                if (obj.hasOwnProperty(key)) {// 忽略从原型后面继承的对象
+                    if (obj[key] && typeof obj[key] === "object") {
+                        cloneObj[key] = deepClone(obj[key]);
+                    } else {
+                        cloneObj[key] = obj[key];
+                    }
+                }
+            }
+        }
         return cloneObj;
     }
     // 处理null或者undefined
