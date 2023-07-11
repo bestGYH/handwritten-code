@@ -1,11 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>new关键字</title>
 </head>
+
 <body>
-    
+    <script>
+        function Person() {
+            this.name = 'jing'
+            this.fn = function () {
+                console.log(`名字是${this.name}`);
+            }
+
+        }
+        // let user = new Person()
+        // console.log('user',user);
+
+        // 1、创建一个对象
+        let obj = new Object()
+        // 2、设置原型链
+        obj.__proto__ = Person.prototype
+        console.log('obj', obj);
+        // 3、 改变this指向
+        let result = Person.call(obj)
+        console.log('result', result);
+        // 4、判断返回值
+        if (typeof result === 'object') {
+            user = result
+        } else {
+            user = obj
+        }
+        console.log('user', user);
+
+        // 默认函数返回的是 undefined
+        // 但是构造函数，默认返回新创建的对象
+    </script>
 </body>
+
 </html>

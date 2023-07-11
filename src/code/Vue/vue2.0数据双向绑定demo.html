@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vue2.0数据双向绑定demo</title>
+</head>
+<body>
+    <h3>订阅1</h3>
+    <span class="one-box"></span>
+    <h3>订阅2</h3>
+    <span class="two-box"></span>
+    <script src='./订阅.js'>  </script>
+    <script>
+        let dataObj = {}
+        dataHi({
+            data:dataObj,
+            tag:'vue-1',
+            datakey:'one',
+            selector:'.one-box'
+        }) 
+        dataHi({
+            data:dataObj,
+            tag:'vue-2',
+            datakey:'two',
+            selector:'.two-box'
+        }) 
+        dataObj.one='订阅1的内容'
+        dataObj.two='订阅2的内容'
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模拟vue2.0 v-model</title>
+</head>
+<body>
+    <input type="text" id="username">
+</br>
+    显示值：<span id="nameInfo"></span>
+    <script>
+        let obj = {}
+        Object.defineProperty(obj,'username',{
+            get:function(){
+                console.log('取值');
+            },
+            set:function(val){
+                console.log('设置值');
+                document.getElementById('nameInfo').innerText = val
+            }
+        })
+
+        document.getElementById('username').addEventListener('keyup',function(){
+            console.log(event);
+            obj.username = event.target.value
+        })
+    
+    </script>
+    
+</body>
+</html>

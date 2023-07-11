@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vue3.0响应式--proxy</title>
+</head>
+<body>
+    <script>
+        let obj = {
+            name:'gyh',
+            age:18,
+        }
+        let p = new Proxy(obj,{
+            // target 数据源
+            get(target,propName){
+                console.log(`读取p的${propName}属性`);
+                return target[propName]
+            },
+            // 修改/新增
+            set(target,propName,value){
+                console.log(`修改p的${propName}属性为：${value}`);
+                target[propName] = value
+            },
+            deleteProperty(target,propName){
+                console.log(`删除p的${propName}属性`);
+                return delete target[propName]
+            },
+        })
+    </script>
+</body>
+</html>

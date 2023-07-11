@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事件委托</title>
+</head>
+<body>
+    <ul id="ul">
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+    </ul>
+    <button id="btn">点击加一</button>
+    <script>
+        let ul = document.getElementById('ul')
+        ul.onclick=function(event){
+            event=   event||window.target
+            console.log(event);
+            let {target} = event
+            // 事件委托
+            if(target.nodeName==='LI'){
+                alert(target.innerText)
+            }
+        }
+        const btn = document.getElementById('btn')
+        btn.onclick = (()=>{
+            const el = document.createElement('li')
+            el.textContent='4'
+            ul.appendChild(el)
+        })
+    </script>
+</body>
+</html>
