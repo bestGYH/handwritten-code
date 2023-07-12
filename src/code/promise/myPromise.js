@@ -1,5 +1,6 @@
 
-function MyPromise(fn) {
+
+function MyPromise(excutor) {
     // promise 的状态
     this.promiseState = "pendding";
     // promise 的值
@@ -7,7 +8,7 @@ function MyPromise(fn) {
     // 定义一个函数对象，用来注册then中的callback
     this.thenCallback = undefined;
     this.catchCallback = undefined;
-    var resolve = (value) => {
+    var resolve = (value) => { 
         // 更改promise的状态和值
         if (this.promiseState == "pendding") {
             this.promiseState = "fulfilled";
@@ -45,11 +46,15 @@ function MyPromise(fn) {
             });
         }
     };
-    if (fn) {
-        fn(resolve, reject);
+    // 5、执行一次
+    try {
+        excutor(resolve, reject);
+    } catch (err) {
+        reject(err)
     }
+
 }
-MyPromise.prototype.then = function (callback) {
+MyPromise.prototype.then = function (callback) { //4
     return new MyPromise((resolve, reject) => {
         this.thenCallback = (value) => {
             // 在使用链式调用的时候，可能第一个调用的不是catch
@@ -73,7 +78,7 @@ MyPromise.prototype.then = function (callback) {
         };
     });
 };
-MyPromise.prototype.catch = function (callback) {
+MyPromise.prototype.catch = function (callback) { //4
     return new MyPromise((resolve, reject) => {
         this.catchCallback = (errValue) => {
             var res = callback(errValue);

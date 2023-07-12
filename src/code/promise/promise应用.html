@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ES6-promise应用</title>
+</head>
+<body>
+    <script>
+        // 为什么会有promise，没有promise之前是谁实现了promise做的事情？
+        // 回调函数 :想要顺序执行异步，就需要回调。但是逻辑复杂后，回调地狱，可维护性差
+        // run(0)
+        // setTimeout(()=>{
+        //     run(1)
+        //     setTimeout(()=>{
+        //         run(2)
+        //     },500)
+        // ,1000})
+        
+        // Promise怎么用
+        // Promise =》 承诺，诺言---->异步任务
+        /*
+       许一个承诺(送包包) new Promise ----> 开始等待 状态：pendding（等待）---->实现了 状态：（fulfilled 成功)--》送礼物resolve()
+                                                        |
+                                                        |  食言了(rejected 失败)
+                                                        |
+                                                        v
+                                                    给出理由 reject()
+        */
+        let isForget = true // 是否记得
+        let getLv = new Promise((resolve,reject)=>{
+            if(isForget){
+                let lv ={
+                    color:'red',
+                    price:'1999'
+                }
+                resolve(lv)
+            }else{
+                let err = new Error("加班太忙，忘记了")
+                reject(err)
+            }
+
+        })
+        // let testFn = function(){
+        //     getLv.then((fulfilled)=>{
+        //         console.log('isForget = true,记得承诺，获包包');
+        //         console.log(fulfilled);
+        //     }).catch((rejected)=>{
+        //         console.log('isForget = false,忘记了，给出理由');
+        //         console.log(rejected.message);
+
+        //     })
+        // }
+        // testFn()
+
+        // 链式调用
+
+        // 多个承诺：再定义一个承诺
+        let getLip = (lv)=>{
+            let lip={
+                brand:'mac',
+                color:'pink'
+            }
+            let msg ={
+                message:`我买的口红${lip.brand},搭配我的包包${lv.color}`,
+                lip,lv
+            }
+            return Promise.resolve(msg)
+        }
+
+        let testfn2 = ()=>{
+            getLv.then(getLip).then((fulfilled)=>{
+                console.log(fulfilled);
+            })
+        }
+        testfn2()
+    </script>
+</body>
+</html>

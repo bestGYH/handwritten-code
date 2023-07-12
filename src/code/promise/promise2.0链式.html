@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>promise2.0版本--链式</title>
+</head>
+
+<body>
+    <script>
+        function myPromise(excutor) {
+            // 1. 执行结构
+            let self = this
+            self.status = 'pendding' // 状态
+            self.value = '' // 成功值
+            self.reason = '' // 失败原因
+
+            // 8.添加缓存
+            self.onFulfilledCallbacks = []
+            self.onRejecteddCallbacks = []
+
+
+            // 4.完善resolve，reject判断状态，做处理
+            // 成功
+            function resolve(value) {
+                if (self.status === 'pendding') {
+                    self.value = value
+                    self.status = 'fulfilled' // 状态
+
+                    // 10. 状态改变-发布，依次取出
+                    self.onFulfilledCallbacks.forEach(item => item(value))
+
+                }
+            }
+            // 失败
+            function reject(reason) {
+                if (self.status === 'pendding') {
+                    self.reason = reason
+                    self.status = 'rejected' // 状态
+                    self.onRejecteddCallbacks.forEach(item => item(reason))
+
+                }
+            }
+            // 3.执行一遍
+            try {
+                excutor(resolve, reject)
+            } catch (err) {
+                reject(err)
+            }
+
+        }
+        // 2. 定义then
+        myPromise.prototype.then = function (onFulfilled, onRejected) {
+            //5、状态改变，调用then（）
+            onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : function (data) {
+                resolve(data)
+            }
+            onRejected = typeof onRejected === 'function' ? onRejected : function (err) {
+                throw err
+            }
+            //9. 添加--订阅
+            let self = this
+            if (self.status === 'fulfilled') {
+                return new myPromise((resolve, reject) => {
+                    try {
+                        let x = onFulfilled(self.value)
+                        // 判断传进来的是否为myPromise的实例，是的话继续.then
+                        x instanceof myPromise ? x.then(resolve, reject) : resolve(x)
+
+                    } catch (err) {
+                        reject(err)
+                    }
+
+                })
+            }
+            if (self.status === 'rejected') {
+                return new myPromise((resolve, reject) => {
+                    try {
+                        let x = onRejected(self.value)
+                        x instanceof myPromise ? x.then(resolve, reject) : reject(x)
+
+                    } catch (err) {
+                        reject(err)
+                    }
+
+                })
+            }
+            if (self.status === 'pendding') {
+                return new myPromise((resolve, reject) => {
+                    self.onFulfilledCallbacks.push(() => {
+                        let x = onFulfilled(self.value)
+                        x instanceof myPromise ? x.then(resolve, reject) : resolve(x)
+                    })
+                    self.onRejecteddCallbacks.push(() => {
+                        x instanceof myPromise ? x.then(resolve, reject) : resolve(x)
+
+                    })
+
+                })
+            }
+        }
+        myPromise.prototype.catch = function(fn){
+            return this.then(null,fn)
+        }
+        let demo = new myPromise((resolve, reject) => {
+            console.log('执行promise');
+            //6\ 尝试异步
+            setTimeout(() => {
+                resolve(1) // 异步执行 此时.then还有拿到改变后的状态
+            }, 500)
+        })
+        //7\ 尝试异步-异步失败---需要用到订阅发布的模式
+        demo.then(data => console.log(data))
+
+
+
+        //测试
+        let isForget = true // 是否记得
+        let getLv = new myPromise((resolve,reject)=>{
+            if(isForget){
+                let lv ={
+                    color:'red',
+                    price:'1999'
+                }
+                resolve(lv)
+            }else{
+                let err = new Error("加班太忙，忘记了")
+                reject(err)
+            }
+
+        })
+        // 链式调用
+
+        // 多个承诺：再定义一个承诺
+        let getLip = (lv)=>{
+            let lip={
+                brand:'mac',
+                color:'pink'
+            }
+            let msg ={
+                message:`我买的口红${lip.brand},搭配我的包包${lv.color}`,
+                lip,lv
+            }
+            return new myPromise((resolve,reject)=>{
+                resolve(msg)
+            })
+        }
+
+        let testfn2 = ()=>{
+            getLv.then(getLip).then((fulfilled)=>{
+                console.log(fulfilled);
+            })
+        }
+        testfn2()
+    </script>
+</body>
+
+</html>

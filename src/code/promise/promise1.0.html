@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>promise1.0版本</title>
+</head>
+
+<body>
+    <script>
+        // promise基本组成结构
+        // 1、状态
+        // 2、成功值
+        // 3、失败原因
+        // 4、resolve，reject方法
+        // 5、promise中的.then,.catch
+
+        function myPromise(excutor) {
+            // 1. 执行结构
+            let self = this
+            self.status = 'pendding' // 状态
+            self.value = '' // 成功值
+            self.reason = '' // 失败原因
+
+            // 8.添加缓存
+                self.onFulfilledCallbacks=[]
+                self.onRejecteddCallbacks=[]
+
+
+            // 4.完善resolve，reject判断状态，做处理
+            // 成功
+            function resolve(value) {
+                if (self.status === 'pendding') {
+                    self.value = value
+                    self.status = 'fulfilled' // 状态
+
+                    // 10. 状态改变-发布，依次取出
+                    self.onFulfilledCallbacks.forEach(item=>item(value))
+
+                }
+            }
+            // 失败
+            function reject(reason) {
+                if (self.status === 'pendding') {
+                    self.reason = reason
+                    self.status = 'rejected' // 状态
+                    self.onRejecteddCallbacks.forEach(item=>item(reason))
+
+                }
+            }
+            // 3.执行一遍
+            try {
+                excutor(resolve, reject)
+            } catch (err) {
+                reject(err)
+            }
+
+        }
+        // 2. 定义then
+        myPromise.prototype.then = function (onFulfilled,onRejected) {
+            //5、状态改变，调用then（）
+            onFulfilled = typeof onFulfilled ==='function'?onFulfilled:function(data){resolve(data)}
+            onRejected = typeof onRejected ==='function'?onRejected:function(err){throw err }
+            //9. 添加--订阅
+            let self =this
+            if(self.status==='pendding'){
+                self.onFulfilledCallbacks.push(onFulfilled)
+                self.onRejecteddCallbacks.push(onRejected)
+
+            }
+        }
+
+        let demo = new myPromise((resolve, reject) => {
+            console.log('执行promise');
+            //6\ 尝试异步
+            setTimeout(()=>{
+                resolve(1) // 异步执行 此时.then还有拿到改变后的状态
+            },500)
+        })
+        //7\ 尝试异步-异步失败---需要用到订阅发布的模式
+        demo.then(data=>console.log(data))
+    </script>
+</body>
+
+</html>
